@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  */
 public class InvertedIndex<DOCUMENT, KEY> implements Serializable {
    private static final long serialVersionUID = 1L;
-   private final HashMultimap<KEY, Integer> index;
+   private final HashMultimap<KEY,Integer> index;
    private final List<DOCUMENT> documents;
    private final Function<? super DOCUMENT, Collection<KEY>> documentMapper;
 

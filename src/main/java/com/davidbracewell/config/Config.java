@@ -135,6 +135,14 @@ public final class Config implements Serializable {
       return beans.size() == 1 ? Val.of(beans.get(0)) : Val.of(beans);
    }
 
+   public static boolean isBean(String property) {
+      if( StringUtils.isNullOrBlank(Config.getRaw(property))){
+         return false;
+      }
+      Matcher m = BEAN_SUBSTITUTION.matcher(Config.getRaw(property));
+      return m.find();
+   }
+
    /**
     * Clears all set properties
     */
@@ -327,6 +335,11 @@ public final class Config implements Serializable {
    public static Val get(String propertyPrefix, Language language, String... propertyComponents) {
       String key = findKey(propertyPrefix, language, propertyComponents);
       return key == null ? Val.of(null) : get(key);
+   }
+
+
+   static String getRaw(String property) {
+      return getInstance().properties.get(property);
    }
 
    /**

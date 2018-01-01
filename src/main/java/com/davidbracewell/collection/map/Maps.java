@@ -49,6 +49,19 @@ import static com.davidbracewell.tuple.Tuples.$;
  */
 public interface Maps {
 
+   /**
+    * Creates a new HashMap containing the given entries.
+    *
+    * @param <K>     the key type
+    * @param <V>     the value type
+    * @param entries the entries to initialize the map with
+    * @return the map
+    */
+   @SafeVarargs
+   @SuppressWarnings("varargs")
+   static <K, V> Map<K, V> asMap(Map.Entry<K, V>... entries) {
+      return createMap(HashMap::new, entries);
+   }
 
    /**
     * Creates an instance of the given map class.
@@ -73,581 +86,51 @@ public interface Maps {
    }
 
    /**
-    * Creates a new HashMap containing the given entries.
+    * Creates a new map with the given keys and values
     *
-    * @param <K>     the key type
-    * @param <V>     the value type
-    * @param entries the entries to initialize the map with
+    * @param <K>         the key type
+    * @param <V>         the value type
+    * @param mapSupplier the map supplier
+    * @param entries     the entries
     * @return the map
     */
    @SafeVarargs
    @SuppressWarnings("varargs")
-   static <K, V> Map<K, V> asMap(Map.Entry<K, V>... entries) {
-      return createMap(HashMap::new, entries);
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1) {
-      return createMap(HashMap::new, $(key1, value1));
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2) {
-      return createMap(HashMap::new, $(key1, value1), $(key2, value2));
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3) {
-      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3));
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
-      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4));
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
-      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4),
-                       $(key5, value5));
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6) {
-      return createMap(HashMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6)
-                      );
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7) {
-      return createMap(HashMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7)
-                      );
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @param key8   the key 8
-    * @param value8 the value 8
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8) {
-      return createMap(HashMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8)
-                      );
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @param key8   the key 8
-    * @param value8 the value 8
-    * @param key9   the key 9
-    * @param value9 the value 9
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9) {
-      return createMap(HashMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8),
-                       $(key9, value9)
-                      );
-   }
-
-   /**
-    * Creates a new map with the given keys and values
-    *
-    * @param <K>     the type parameter
-    * @param <V>     the type parameter
-    * @param key1    the key 1
-    * @param value1  the value 1
-    * @param key2    the key 2
-    * @param value2  the value 2
-    * @param key3    the key 3
-    * @param value3  the value 3
-    * @param key4    the key 4
-    * @param value4  the value 4
-    * @param key5    the key 5
-    * @param value5  the value 5
-    * @param key6    the key 6
-    * @param value6  the value 6
-    * @param key7    the key 7
-    * @param value7  the value 7
-    * @param key8    the key 8
-    * @param value8  the value 8
-    * @param key9    the key 9
-    * @param value9  the value 9
-    * @param key10   the key 10
-    * @param value10 the value 10
-    * @return the map
-    */
-   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9, K key10, V value10) {
-      return createMap(HashMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8),
-                       $(key9, value9),
-                       $(key10, value10)
-                      );
-   }
-
-   /**
-    * Put.
-    *
-    * @param <K>   the type parameter
-    * @param <V>   the type parameter
-    * @param map   the map
-    * @param entry the entry
-    */
-   static <K, V> void put(@NonNull Map<K, V> map, Map.Entry<K, V> entry) {
-      if (entry != null) {
-         map.put(entry.getKey(), entry.getValue());
+   static <K, V> Map<K, V> createMap(@NonNull Supplier<Map<K, V>> mapSupplier, Map.Entry<K, V>... entries) {
+      if (entries == null) {
+         return Collections.emptyMap();
       }
-   }
-
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>     the type parameter
-    * @param <V>     the type parameter
-    * @param entries the entries
-    * @return the map
-    */
-   @SafeVarargs
-   @SuppressWarnings("varargs")
-   static <K, V> Map<K, V> treeMap(Map.Entry<K, V>... entries) {
-      return createMap(TreeMap::new, entries);
-   }
-
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1) {
-      return createMap(TreeMap::new, $(key1, value1));
+      final Map<K, V> map = mapSupplier.get();
+      Streams.asStream(entries).forEach(e -> map.put(e.getKey(), e.getValue()));
+      return map;
    }
 
    /**
-    * Creates a new TreeMap using the given entries
+    * <p>Fills a map with an iterable converting the even elements of the iterable to the keys and the odd elements to
+    * the values using the given key and value converters. A null or empty iterable results in an empty map. </p>
     *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @return the map
+    * @param <K>            The key type
+    * @param <V>            The value type
+    * @param map            The map to fill
+    * @param iterable       The iterable to convert into a map
+    * @param keyConverter   The converter to use for the keys (even elements)
+    * @param valueConverter The converter to use for the values (odd elements)
+    * @return The map.
     */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2) {
-      return createMap(TreeMap::new, $(key1, value1), $(key2, value2));
+   static <K, V> Map<K, V> fillMap(@NonNull Map<K, V> map, Iterable<?> iterable, @NonNull Function<Object, K> keyConverter, @NonNull Function<Object, V> valueConverter) {
+      if (iterable == null) {
+         return map;
+      }
+      for (Iterator<?> iterator = iterable.iterator(); iterator.hasNext(); ) {
+         Object key = iterator.next();
+         if (!iterator.hasNext()) {
+            throw new IllegalArgumentException("Size of iterable must be divisible by 2");
+         }
+         Object value = iterator.next();
+         map.put(keyConverter.apply(key), valueConverter.apply(value));
+      }
+      return map;
    }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3) {
-      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3));
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
-      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4));
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
-      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4),
-                       $(key5, value5));
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6) {
-      return createMap(TreeMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6)
-                      );
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7) {
-      return createMap(TreeMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7)
-                      );
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @param key8   the key 8
-    * @param value8 the value 8
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8) {
-      return createMap(TreeMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8)
-                      );
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>    the key type
-    * @param <V>    the value type
-    * @param key1   the key 1
-    * @param value1 the value 1
-    * @param key2   the key 2
-    * @param value2 the value 2
-    * @param key3   the key 3
-    * @param value3 the value 3
-    * @param key4   the key 4
-    * @param value4 the value 4
-    * @param key5   the key 5
-    * @param value5 the value 5
-    * @param key6   the key 6
-    * @param value6 the value 6
-    * @param key7   the key 7
-    * @param value7 the value 7
-    * @param key8   the key 8
-    * @param value8 the value 8
-    * @param key9   the key 9
-    * @param value9 the value 9
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9) {
-      return createMap(TreeMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8),
-                       $(key9, value9)
-                      );
-   }
-
-   /**
-    * Creates a new TreeMap using the given entries
-    *
-    * @param <K>     the type parameter
-    * @param <V>     the type parameter
-    * @param key1    the key 1
-    * @param value1  the value 1
-    * @param key2    the key 2
-    * @param value2  the value 2
-    * @param key3    the key 3
-    * @param value3  the value 3
-    * @param key4    the key 4
-    * @param value4  the value 4
-    * @param key5    the key 5
-    * @param value5  the value 5
-    * @param key6    the key 6
-    * @param value6  the value 6
-    * @param key7    the key 7
-    * @param value7  the value 7
-    * @param key8    the key 8
-    * @param value8  the value 8
-    * @param key9    the key 9
-    * @param value9  the value 9
-    * @param key10   the key 10
-    * @param value10 the value 10
-    * @return the map
-    */
-   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9, K key10, V value10) {
-      return createMap(TreeMap::new,
-                       $(key1, value1),
-                       $(key2, value2),
-                       $(key3, value3),
-                       $(key4, value4),
-                       $(key5, value5),
-                       $(key6, value6),
-                       $(key7, value7),
-                       $(key8, value8),
-                       $(key9, value9),
-                       $(key10, value10)
-                      );
-   }
-
 
    /**
     * Creates a new LinkedHashMap using the given entries
@@ -920,7 +403,6 @@ public interface Maps {
                       );
    }
 
-
    /**
     * Creates a new LinkedHashMap using the given entries
     *
@@ -935,25 +417,288 @@ public interface Maps {
       return createMap(LinkedHashMap::new, entries);
    }
 
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1) {
+      return createMap(HashMap::new, $(key1, value1));
+   }
 
    /**
     * Creates a new map with the given keys and values
     *
-    * @param <K>         the key type
-    * @param <V>         the value type
-    * @param mapSupplier the map supplier
-    * @param entries     the entries
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
     * @return the map
     */
-   @SafeVarargs
-   @SuppressWarnings("varargs")
-   static <K, V> Map<K, V> createMap(@NonNull Supplier<Map<K, V>> mapSupplier, Map.Entry<K, V>... entries) {
-      if (entries == null) {
-         return Collections.emptyMap();
-      }
-      final Map<K, V> map = mapSupplier.get();
-      Streams.asStream(entries).forEach(e -> map.put(e.getKey(), e.getValue()));
-      return map;
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2) {
+      return createMap(HashMap::new, $(key1, value1), $(key2, value2));
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3) {
+      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3));
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
+      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4));
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
+      return createMap(HashMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4),
+                       $(key5, value5));
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6) {
+      return createMap(HashMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6)
+                      );
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7) {
+      return createMap(HashMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7)
+                      );
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @param key8   the key 8
+    * @param value8 the value 8
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8) {
+      return createMap(HashMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8)
+                      );
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @param key8   the key 8
+    * @param value8 the value 8
+    * @param key9   the key 9
+    * @param value9 the value 9
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9) {
+      return createMap(HashMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8),
+                       $(key9, value9)
+                      );
+   }
+
+   /**
+    * Creates a new map with the given keys and values
+    *
+    * @param <K>     the type parameter
+    * @param <V>     the type parameter
+    * @param key1    the key 1
+    * @param value1  the value 1
+    * @param key2    the key 2
+    * @param value2  the value 2
+    * @param key3    the key 3
+    * @param value3  the value 3
+    * @param key4    the key 4
+    * @param value4  the value 4
+    * @param key5    the key 5
+    * @param value5  the value 5
+    * @param key6    the key 6
+    * @param value6  the value 6
+    * @param key7    the key 7
+    * @param value7  the value 7
+    * @param key8    the key 8
+    * @param value8  the value 8
+    * @param key9    the key 9
+    * @param value9  the value 9
+    * @param key10   the key 10
+    * @param value10 the value 10
+    * @return the map
+    */
+   static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9, K key10, V value10) {
+      return createMap(HashMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8),
+                       $(key9, value9),
+                       $(key10, value10)
+                      );
+   }
+
+   static <K, V extends Comparable<? super V>> K maxKeyByValue(@NonNull Map<K, V> map) {
+      return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.<K, V>comparingByValue().reversed())
+                .findFirst()
+                .map(Map.Entry::getKey)
+                .orElse(null);
+   }
+
+   static <K, V extends Comparable<? super V>> K minKeyByValue(@NonNull Map<K, V> map) {
+      return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .findFirst()
+                .map(Map.Entry::getKey)
+                .orElse(null);
    }
 
 
@@ -993,7 +738,7 @@ public interface Maps {
       if (StringUtils.isNullOrBlank(input)) {
          return Collections.emptyMap();
       }
-      String str = input.replaceFirst("^\\s*\\{", "").replaceFirst("}$\\s*", "");
+      String str = input.replaceAll("^\\s*\\{", "").replaceAll("}$\\s*", "");
       Map<K, V> map = new HashMap<>();
 
       try (CSVReader reader = CSV.builder().reader(new StringReader(str))) {
@@ -1010,6 +755,20 @@ public interface Maps {
                        );
       }
       return map;
+   }
+
+   /**
+    * Put.
+    *
+    * @param <K>   the type parameter
+    * @param <V>   the type parameter
+    * @param map   the map
+    * @param entry the entry
+    */
+   static <K, V> void put(@NonNull Map<K, V> map, Map.Entry<K, V> entry) {
+      if (entry != null) {
+         map.put(entry.getKey(), entry.getValue());
+      }
    }
 
    /**
@@ -1039,6 +798,286 @@ public interface Maps {
    }
 
    /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>     the type parameter
+    * @param <V>     the type parameter
+    * @param entries the entries
+    * @return the map
+    */
+   @SafeVarargs
+   @SuppressWarnings("varargs")
+   static <K, V> Map<K, V> treeMap(Map.Entry<K, V>... entries) {
+      return createMap(TreeMap::new, entries);
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1) {
+      return createMap(TreeMap::new, $(key1, value1));
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2) {
+      return createMap(TreeMap::new, $(key1, value1), $(key2, value2));
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3) {
+      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3));
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
+      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4));
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
+      return createMap(TreeMap::new, $(key1, value1), $(key2, value2), $(key3, value3), $(key4, value4),
+                       $(key5, value5));
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6) {
+      return createMap(TreeMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6)
+                      );
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7) {
+      return createMap(TreeMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7)
+                      );
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @param key8   the key 8
+    * @param value8 the value 8
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8) {
+      return createMap(TreeMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8)
+                      );
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>    the key type
+    * @param <V>    the value type
+    * @param key1   the key 1
+    * @param value1 the value 1
+    * @param key2   the key 2
+    * @param value2 the value 2
+    * @param key3   the key 3
+    * @param value3 the value 3
+    * @param key4   the key 4
+    * @param value4 the value 4
+    * @param key5   the key 5
+    * @param value5 the value 5
+    * @param key6   the key 6
+    * @param value6 the value 6
+    * @param key7   the key 7
+    * @param value7 the value 7
+    * @param key8   the key 8
+    * @param value8 the value 8
+    * @param key9   the key 9
+    * @param value9 the value 9
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9) {
+      return createMap(TreeMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8),
+                       $(key9, value9)
+                      );
+   }
+
+   /**
+    * Creates a new TreeMap using the given entries
+    *
+    * @param <K>     the type parameter
+    * @param <V>     the type parameter
+    * @param key1    the key 1
+    * @param value1  the value 1
+    * @param key2    the key 2
+    * @param value2  the value 2
+    * @param key3    the key 3
+    * @param value3  the value 3
+    * @param key4    the key 4
+    * @param value4  the value 4
+    * @param key5    the key 5
+    * @param value5  the value 5
+    * @param key6    the key 6
+    * @param value6  the value 6
+    * @param key7    the key 7
+    * @param value7  the value 7
+    * @param key8    the key 8
+    * @param value8  the value 8
+    * @param key9    the key 9
+    * @param value9  the value 9
+    * @param key10   the key 10
+    * @param value10 the value 10
+    * @return the map
+    */
+   static <K, V> Map<K, V> treeMap(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5, K key6, V value6, K key7, V value7, K key8, V value8, K key9, V value9, K key10, V value10) {
+      return createMap(TreeMap::new,
+                       $(key1, value1),
+                       $(key2, value2),
+                       $(key3, value3),
+                       $(key4, value4),
+                       $(key5, value5),
+                       $(key6, value6),
+                       $(key7, value7),
+                       $(key8, value8),
+                       $(key9, value9),
+                       $(key10, value10)
+                      );
+   }
+
+   /**
     * Writes the given map in csv format to the given resource
     *
     * @param <K>    the key type
@@ -1055,33 +1094,6 @@ public interface Maps {
                         );
          }
       }
-   }
-
-   /**
-    * <p>Fills a map with an iterable converting the even elements of the iterable to the keys and the odd elements to
-    * the values using the given key and value converters. A null or empty iterable results in an empty map. </p>
-    *
-    * @param <K>            The key type
-    * @param <V>            The value type
-    * @param map            The map to fill
-    * @param iterable       The iterable to convert into a map
-    * @param keyConverter   The converter to use for the keys (even elements)
-    * @param valueConverter The converter to use for the values (odd elements)
-    * @return The map.
-    */
-   static <K, V> Map<K, V> fillMap(@NonNull Map<K, V> map, Iterable<?> iterable, @NonNull Function<Object, K> keyConverter, @NonNull Function<Object, V> valueConverter) {
-      if (iterable == null) {
-         return map;
-      }
-      for (Iterator<?> iterator = iterable.iterator(); iterator.hasNext(); ) {
-         Object key = iterator.next();
-         if (!iterator.hasNext()) {
-            throw new IllegalArgumentException("Size of iterable must be divisible by 2");
-         }
-         Object value = iterator.next();
-         map.put(keyConverter.apply(key), valueConverter.apply(value));
-      }
-      return map;
    }
 
 }//END OF Maps

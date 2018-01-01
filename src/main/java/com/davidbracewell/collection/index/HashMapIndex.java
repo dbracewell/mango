@@ -25,9 +25,13 @@ import com.google.common.collect.Iterators;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Synchronized;
+import org.apache.mahout.math.map.OpenObjectIntHashMap;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p>An Index implementation that uses a combination of a HashMap and List.</p>
@@ -38,7 +42,7 @@ import java.util.*;
 @EqualsAndHashCode(exclude = "map", callSuper = false)
 public class HashMapIndex<TYPE> implements Index<TYPE>, Serializable {
    private static final long serialVersionUID = -288128807385573349L;
-   private final Map<TYPE, Integer> map = new HashMap<>();
+   private final OpenObjectIntHashMap<TYPE> map = new OpenObjectIntHashMap<>();
    private final List<TYPE> list = new ArrayList<>();
 
    @Override
@@ -61,16 +65,27 @@ public class HashMapIndex<TYPE> implements Index<TYPE>, Serializable {
    }
 
    @Override
-   public Index<TYPE> copy() {
-      HashMapIndex<TYPE> copy = new HashMapIndex<>();
-      copy.map.putAll(this.map);
-      copy.list.addAll(this.list);
-      return copy;
+   public List<TYPE> asList() {
+      return Collections.unmodifiableList(list);
    }
 
    @Override
-   public int getId(TYPE item) {
-      return map.getOrDefault(item, -1);
+   public void clear() {
+      map.clear();
+      list.clear();
+   }
+
+   @Override
+   public boolean contains(TYPE item) {
+      return map.containsKey(item);
+   }
+
+   @Override
+   public Index<TYPE> copy() {
+      HashMapIndex<TYPE> copy = new HashMapIndex<>();
+      this.map.forEachPair(copy.map::put);
+      copy.list.addAll(this.list);
+      return copy;
    }
 
    @Override
@@ -82,19 +97,21 @@ public class HashMapIndex<TYPE> implements Index<TYPE>, Serializable {
    }
 
    @Override
-   public void clear() {
-      map.clear();
-      list.clear();
-   }
-
-   @Override
-   public int size() {
-      return list.size();
+   public int getId(TYPE item) {
+      if (map.containsKey(item)) {
+         return map.get(item);
+      }
+      return -1;
    }
 
    @Override
    public boolean isEmpty() {
       return list.isEmpty();
+   }
+
+   @Override
+   public Iterator<TYPE> iterator() {
+      return Iterators.unmodifiableIterator(list.iterator());
    }
 
    @Override
@@ -105,7 +122,7 @@ public class HashMapIndex<TYPE> implements Index<TYPE>, Serializable {
       for (int i = id + 1; i < list.size(); i++) {
          map.put(list.get(i), i - 1);
       }
-      map.remove(list.get(id));
+      map.removeKey(list.get(id));
       return list.remove(id);
    }
 
@@ -119,23 +136,12 @@ public class HashMapIndex<TYPE> implements Index<TYPE>, Serializable {
    }
 
    @Override
-   public boolean contains(TYPE item) {
-      return map.containsKey(item);
-   }
-
-   @Override
-   public Iterator<TYPE> iterator() {
-      return Iterators.unmodifiableIterator(list.iterator());
+   public int size() {
+      return list.size();
    }
 
    @Override
    public String toString() {
       return list.toString();
-   }
-
-
-   @Override
-   public List<TYPE> asList() {
-      return Collections.unmodifiableList(list);
    }
 }//END OF AbstractMapListIndex

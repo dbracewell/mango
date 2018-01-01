@@ -24,13 +24,13 @@ package com.davidbracewell.collection.counter;
 
 import com.davidbracewell.Copyable;
 import com.davidbracewell.Math2;
-import com.davidbracewell.collection.Sorting;
 import com.davidbracewell.conversion.Convert;
 import com.davidbracewell.io.CSV;
 import com.davidbracewell.io.CSVWriter;
+import com.davidbracewell.io.Commitable;
 import com.davidbracewell.io.resource.Resource;
-import com.davidbracewell.io.structured.StructuredFormat;
-import com.davidbracewell.io.structured.StructuredWriter;
+import com.davidbracewell.json.JsonWriter;
+import com.davidbracewell.json.Json;
 import lombok.NonNull;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @param <T> Component type being counted.
  * @author David B. Bracewell
  */
-public interface Counter<T> extends Copyable<Counter<T>> {
+public interface Counter<T> extends Copyable<Counter<T>>, AutoCloseable, Commitable {
 
    /**
     * Constructs a new counter made up of counts that are adjusted using the supplied function.
@@ -53,7 +53,9 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     * @param function The function to use to adjust the counts
     * @return The new counter with adjusted counts.
     */
-   Counter<T> adjustValues(DoubleUnaryOperator function);
+   default Counter<T> adjustValues(@NonNull DoubleUnaryOperator function) {
+      return copy().adjustValuesSelf(function);
+   }
 
    /**
     * Adjust the values in-place using the supplied function
@@ -160,7 +162,10 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     *
     * @return the counter
     */
-   Counter<T> divideBySum();
+   default Counter<T> divideBySum() {
+      double sum = sum();
+      return adjustValuesSelf(d -> d / sum);
+   }
 
    /**
     * A set of object - double entries making up the counter
@@ -260,10 +265,10 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     * @return The sorted list of items.
     */
    default List<T> itemsByCount(boolean ascending) {
-      return Sorting.sortMapEntriesByValue(asMap(), ascending)
-                    .stream()
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
+      return entries().parallelStream()
+                      .sorted((e1, e2) -> (ascending ? 1 : -1) * Double.compare(e1.getValue(), e2.getValue()))
+                      .map(Map.Entry::getKey)
+                      .collect(Collectors.toList());
    }
 
    /**
@@ -290,7 +295,11 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     * @return The item with max count
     */
    default T max() {
-      return Collections.max(asMap().entrySet(), Map.Entry.comparingByValue()).getKey();
+      return entries()
+                .parallelStream()
+                .max(Comparator.comparingDouble(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .orElse(null);
    }
 
    /**
@@ -302,7 +311,11 @@ public interface Counter<T> extends Copyable<Counter<T>> {
       if (isEmpty()) {
          return 0d;
       }
-      return Collections.max(values());
+      return entries()
+                .parallelStream()
+                .max(Comparator.comparingDouble(Map.Entry::getValue))
+                .map(Map.Entry::getValue)
+                .orElse(0d);
    }
 
    /**
@@ -327,7 +340,11 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     * @return The item with min count
     */
    default T min() {
-      return Collections.min(asMap().entrySet(), Map.Entry.comparingByValue()).getKey();
+      return entries()
+                .parallelStream()
+                .min(Comparator.comparingDouble(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .orElse(null);
    }
 
    /**
@@ -339,7 +356,11 @@ public interface Counter<T> extends Copyable<Counter<T>> {
       if (isEmpty()) {
          return 0d;
       }
-      return Collections.min(values());
+      return entries()
+                .parallelStream()
+                .min(Comparator.comparingDouble(Map.Entry::getValue))
+                .map(Map.Entry::getValue)
+                .orElse(0d);
    }
 
    /**
@@ -451,10 +472,10 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     * @throws IOException Something went wrong writing
     */
    default void writeJson(@NonNull Resource output) throws IOException {
-      try (StructuredWriter writer = StructuredFormat.JSON.createWriter(output)) {
+      try (JsonWriter writer = Json.createWriter(output)) {
          writer.beginDocument();
          for (Map.Entry<T, Double> entry : entries()) {
-            writer.writeKeyValue(Convert.convert(entry.getKey(), String.class), entry.getValue());
+            writer.property(Convert.convert(entry.getKey(), String.class), entry.getValue());
          }
          writer.endDocument();
       }
@@ -467,6 +488,18 @@ public interface Counter<T> extends Copyable<Counter<T>> {
     */
    default void forEach(@NonNull BiConsumer<? super T, ? super Double> consumer) {
       entries().forEach(e -> consumer.accept(e.getKey(), e.getValue()));
+   }
+
+   @Override
+   default void close() throws Exception {
+
+   }
+
+   /**
+    * Commits changes
+    */
+   default void commit() {
+
    }
 
 }//END OF Counter

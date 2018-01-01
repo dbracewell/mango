@@ -1,5 +1,6 @@
 package com.davidbracewell.collection;
 
+import com.davidbracewell.collection.map.Maps;
 import com.davidbracewell.conversion.Cast;
 import com.davidbracewell.string.StringUtils;
 import com.google.common.base.CharMatcher;
@@ -130,7 +131,7 @@ public class Trie<V> implements Serializable, Map<String, V> {
 
             lastMatch = -1;
             //check if we accept
-            if (delimiter.matches(text.charAt(nextI))) {
+            if (nextI >= len || delimiter.matches(text.charAt(nextI))) {
                V value = get(key.toString());
                results.add(new TrieMatch<>(start, nextI, value));
                start = nextI;
@@ -269,14 +270,109 @@ public class Trie<V> implements Serializable, Map<String, V> {
       return value;
    }
 
+   private void search(TrieNode<V> node, char letter, String word, int[] previous, Map<String, Integer> results, int maxCost, int substitutionCost) {
+      int columns = word.length() + 1;
+      int[] current = new int[columns];
+      current[0] = previous[0] + 1;
+      int rowMin = current[0];
+
+      for (int i = 1; i < columns; i++) {
+         int insertCost = current[i - 1] + 1;
+         int deleteCost = previous[i] + 1;
+         int replaceCost = previous[i - 1];
+         if (word.charAt(i - 1) != letter) {
+            replaceCost += substitutionCost;
+         }
+         current[i] = Math.min(insertCost, Math.min(deleteCost, replaceCost));
+         rowMin = Math.min(rowMin, current[i]);
+      }
+
+      if (current[columns - 1] <= maxCost && node.matches != null) {
+         results.put(node.matches, current[columns - 1]);
+      }
+
+      if (rowMin <= maxCost) {
+         for (TrieNode<V> child : node.children) {
+            if (child != null) {
+               search(child, child.nodeChar, word, current, results, maxCost, substitutionCost);
+            }
+         }
+      }
+
+   }
+
    @Override
    public int size() {
       return root.size;
    }
 
+   /**
+    * Suggest map.
+    *
+    * @param string the string
+    * @return the map
+    */
+   public Map<String, Integer> suggest(String string) {
+      return suggest(string, 3, 1);
+   }
+
+   /**
+    * Suggest map.
+    *
+    * @param string  the string
+    * @param maxCost the max cost
+    * @return the map
+    */
+   public Map<String, Integer> suggest(String string, int maxCost) {
+      return suggest(string, maxCost, 1);
+   }
+
+   /**
+    * Suggest map.
+    *
+    * @param string           the string
+    * @param maxCost          the max cost
+    * @param substitutionCost the substitution cost
+    * @return the map
+    */
+   public Map<String, Integer> suggest(String string, int maxCost, int substitutionCost) {
+      if (StringUtils.isNullOrBlank(string)) {
+         return Collections.emptyMap();
+      } else if (containsKey(string)) {
+         return Maps.map(string, 0);
+      }
+      Map<String, Integer> results = new HashMap<>();
+      int[] current = new int[string.length() + 1];
+      for (int i = 0; i < current.length; i++) {
+         current[i] = i;
+      }
+      for (TrieNode<V> child : root.children) {
+         if (child != null) {
+            search(child, child.nodeChar, string, current, results, maxCost, substitutionCost);
+         }
+      }
+      return results;
+   }
+
    @Override
    public String toString() {
       return entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(", ", "{", "}"));
+   }
+
+   /**
+    * Compresses the memory of the individual trie nodes.
+    *
+    * @return this trie
+    */
+   public Trie<V> trimToSize() {
+      Queue<TrieNode<V>> queue = new LinkedList<>();
+      queue.add(root);
+      while (!queue.isEmpty()) {
+         TrieNode<V> node = queue.remove();
+         node.children.trimToSize();
+         queue.addAll(node.children);
+      }
+      return this;
    }
 
    @Override
@@ -294,7 +390,7 @@ public class Trie<V> implements Serializable, Map<String, V> {
       };
    }
 
-   private static class TrieNode<V> implements Serializable {
+   private static class TrieNode<V> implements Serializable, Comparable<TrieNode<V>> {
       private static final long serialVersionUID = 1L;
       private final Character nodeChar;
       private final TrieNode<V> parent;
@@ -302,7 +398,7 @@ public class Trie<V> implements Serializable, Map<String, V> {
       private V value;
       private String matches;
       private int size = 0;
-      private Map<Character, TrieNode<V>> children = new HashMap<>(1);
+      private ArrayList<TrieNode<V>> children = new ArrayList<>(5);
 
       private TrieNode(Character nodeChar, TrieNode<V> parent) {
          this.nodeChar = nodeChar;
@@ -314,6 +410,17 @@ public class Trie<V> implements Serializable, Map<String, V> {
          }
       }
 
+      @Override
+      public int compareTo(TrieNode<V> o) {
+         return nodeChar.compareTo(o.nodeChar);
+      }
+
+      /**
+       * Contains boolean.
+       *
+       * @param string the string
+       * @return the boolean
+       */
       public boolean contains(String string) {
          return find(string) != null;
       }
@@ -337,43 +444,77 @@ public class Trie<V> implements Serializable, Map<String, V> {
             }
             return old;
          }
-         if (!children.containsKey(word[start])) {
-            children.put(word[start], new TrieNode<>(word[start], this));
+
+         TrieNode<V> cNode = new TrieNode<>(word[start], this);
+         int index = Collections.binarySearch(children, cNode);
+         if (index < 0) {
+            if (children.isEmpty()) {
+               children.add(cNode);
+               index = 0;
+            } else {
+               index = Math.abs(index)-1;
+               children.add(index, cNode);
+            }
          }
-         V toReturn = children.get(word[start]).extend(word, start + 1, value);
+         cNode = children.get(index);
+         V toReturn = cNode.extend(word, start + 1, value);
          if (toReturn == null) {
             size++;
          }
          return toReturn;
       }
 
+      /**
+       * Find trie node.
+       *
+       * @param string the string
+       * @return the trie node
+       */
       TrieNode<V> find(String string) {
          if (string == null || string.length() == 0) {
             return null;
          }
          TrieNode<V> node = this;
          if (nodeChar == null) {
-            node = children.get(string.charAt(0));
+            node = get(string.charAt(0));
          } else if (nodeChar != string.charAt(0)) {
             return null;
          }
          for (int i = 1; node != null && i < string.length(); i++) {
-            node = node.children.get(string.charAt(i));
+            node = node.get(string.charAt(i));
+//            node = node.children.get(string.charAt(i));
          }
          return node;
       }
 
+      private TrieNode<V> get(char c) {
+         TrieNode<V> tnode = new TrieNode<>(c, parent);
+         int index = Collections.binarySearch(children, tnode);
+         if (index < 0) {
+            return null;
+         }
+         return children.get(index);
+      }
+
+      /**
+       * Prune.
+       */
       void prune() {
          if (parent == null) {
             return;
          }
          if (matches == null && children.isEmpty()) {
-            parent.children.remove(nodeChar);
+            parent.children.remove(this);
          }
          parent.size--;
          parent.prune();
       }
 
+      /**
+       * Sub tree iterator iterator.
+       *
+       * @return the iterator
+       */
       Iterator<Map.Entry<String, V>> subTreeIterator() {
          return new EntryIterator<>(this);
       }
@@ -394,10 +535,16 @@ public class Trie<V> implements Serializable, Map<String, V> {
          if (node.matches != null) {
             queue.add(node);
          } else {
-            queue.addAll(node.children.values());
+            queue.addAll(node.children);
          }
       }
 
+      /**
+       * Convert e.
+       *
+       * @param node the node
+       * @return the e
+       */
       abstract E convert(TrieNode<V> node);
 
       @Override
@@ -411,7 +558,7 @@ public class Trie<V> implements Serializable, Map<String, V> {
                return null;
             }
             current = queue.remove();
-            queue.addAll(current.children.values());
+            queue.addAll(current.children);
          }
          return current;
       }

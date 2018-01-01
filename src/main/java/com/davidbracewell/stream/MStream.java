@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  * @param <T> the component type of the stream
  * @author David B. Bracewell
  */
-public interface MStream<T> extends AutoCloseable {
+public interface MStream<T> extends AutoCloseable, Iterable<T> {
 
 
    /**
@@ -430,5 +430,9 @@ public interface MStream<T> extends AutoCloseable {
     * @return the new pair stream
     */
    MPairStream<T, Long> zipWithIndex();
+
+   default SparkStream<T> toDistributedStream(){
+      return new SparkStream<>(this);
+   }
 
 }//END OF MStream
